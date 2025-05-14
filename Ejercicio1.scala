@@ -1,0 +1,67 @@
+package practica5
+
+import scala.util.Random
+/*1. Problema del productor-consumidor en Scala con un buffer circular de N
+     posiciones. N es una constante que vale, por ejemplo: 20
+        - Existe una única hebra representando al productor que irá produciendo elementos de
+        tipo entero consecutivos (0, 1, 2, etc). El número Total de enteros que produce también
+        es una constante, por ejemplo: 200.
+        - Existe un buffer circular acotado compartido por el productor y el consumidor para
+        producir y consumir los elementos donde se tendrán los siguientes atributos:
+        -> elem: array con los elementos del buffer.
+        -> p: indica la posición por la que se va produciendo.
+        -> c: indica la posición por la que se va consumiendo.
+        -> nelem: número de elementos válidos contenidos en el buffer
+        - Existe un único consumidor que irá mostrando por pantalla los elementos depositados en el buffer.*/
+object Buffer1{
+  private val N = 20
+  private val buffer = new Array[Int](N)
+  private var i = 0
+  private var j = 0
+  private var numElems = 0
+  @volatile private var fp = false
+  @volatile private var fc = false
+  @volatile private var turno = 0 // 0 = productor, 1 = consumidor
+
+  def nuevoDato(dato: Int) = {
+    while (numElems == n) Thread.sleep(0) // Condición sincronización productor
+
+    fp = true
+    turno = 1 // Dar permiso al consumidor
+
+    while (fc && turno == 1) Thread.sleep(0)
+    buffer(i) == dato // Añadir dato al buffer
+    i = (i + 1) % n
+    numElems += 1 // Incrementar nº elementos
+
+  }
+
+  def extraeDato(dato: Int) = {
+    while (numElems == n) Thread.sleep(0) // Condición sincronización consumidor
+
+    fc = true
+    turno = 0 // dar permiso al consumidor
+    while (fp && turno == 0) Thread.sleep(0)
+
+    val dato = buffer(j)
+    j = (j + 1) % n
+    numElems -= 1
+
+    dato
+  }
+}
+class Ejercicio1 {
+  def main(args: Array[String]) = {
+    val b = Buffer1(n)
+    val prod = thread {
+      for (i <- 0 until 50)
+        Thread.sleep(Random.nextInt(100))
+      b.nuevoDato(i)
+    }
+
+    val cons = thread {
+      for (i <- 0 until 20)
+
+    }
+  }
+}

@@ -19,8 +19,8 @@ object Buffer1{
   private var i = 0
   private var j = 0
   private var numElems = 0
-  @volatile private var fp = false
-  @volatile private var fc = false
+  @volatile private var fp = false // indica si el productor quiere producir
+  @volatile private var fc = false //   "    "  "  consumidor   "   consumir
   @volatile private var turno = 0 // 0 = productor, 1 = consumidor
 
   def nuevoDato(dato: Int) = {

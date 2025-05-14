@@ -24,7 +24,8 @@ object Buffer1{
   @volatile private var turno = 0 // 0 = productor, 1 = consumidor
 
   def nuevoDato(dato: Int) = {
-    while (numElems == n) Thread.sleep(0) // Condición sincronización productor
+    // Condición sincronización productor   
+    while (numElems == N) Thread.sleep(0)  // Mientras que esté el buffer lleno el productor no puede producir nuevos datos
 
     fp = true
     turno = 1 // Dar permiso al consumidor

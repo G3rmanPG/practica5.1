@@ -45,6 +45,7 @@ object Buffer1{
     while (fp && turno == 0) Thread.sleep(0) // Mientras sea el turno del productor, el consumidor espera
 
     val dato = buffer(j) // extraer dato (consume)
+  // Zona crítica:
     j = (j + 1) % N
     numElems -= 1
     fc = false // termina el turno del consumidor

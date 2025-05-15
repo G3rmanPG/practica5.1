@@ -38,22 +38,22 @@ object Buffer1{
   }
 
   def extraeDato(dato: Int) = {
-    while (numElems == n) Thread.sleep(0) // Condición sincronización consumidor
+    while (numElems == N) Thread.sleep(0) // Condición sincronización consumidor
 
     fc = true
     turno = 0 // dar permiso al consumidor
     while (fp && turno == 0) Thread.sleep(0)
 
     val dato = buffer(j)
-    j = (j + 1) % n
+    j = (j + 1) % N
     numElems -= 1
-
-    dato
+    fc = false // termina el turno del consumidor
+    dato // devolver el dato
   }
 }
 class Ejercicio1 {
   def main(args: Array[String]) = {
-    val b = Buffer1(n)
+    val b = Buffer1(N)
     val prod = thread {
       for (i <- 0 until 50)
         Thread.sleep(Random.nextInt(100))

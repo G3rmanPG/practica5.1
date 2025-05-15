@@ -27,14 +27,14 @@ object Buffer1{
     // Condición sincronización productor   
     while (numElems == N) Thread.sleep(0)  // Mientras que esté el buffer lleno el productor no puede producir nuevos datos
 
-    fp = true
-    turno = 1 // Dar permiso al consumidor
+    fp = true // el productor quiere entrar
+    turno = 1 // le damos permiso al consumidor
 
     while (fc && turno == 1) Thread.sleep(0) // Mientras que sea el permiso del consumidor, espera
     buffer(i) == dato // Añadir dato al buffer
     i = (i + 1) % N // Envolver posición por si nos hemos pasado de la longitud del array
     numElems += 1 // Incrementar nº elementos
-
+    fp = false // Termina el turno del productor
   }
 
   def extraeDato(dato: Int) = {

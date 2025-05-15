@@ -31,7 +31,7 @@ object Buffer1{
     turno = 1 // le damos permiso al consumidor
 
     while (fc && turno == 1) Thread.sleep(0) // Mientras que sea el permiso del consumidor, espera
-    buffer(i) == dato // Añadir dato al buffer
+    buffer(i) == dato // Introducir dato al buffer (produce)
     i = (i + 1) % N // Envolver posición por si nos hemos pasado de la longitud del array
     numElems += 1 // Incrementar nº elementos
     fp = false // Termina el turno del productor
@@ -44,7 +44,7 @@ object Buffer1{
     turno = 0 // dar permiso al consumidor
     while (fp && turno == 0) Thread.sleep(0) // Mientras sea el turno del productor, el consumidor espera
 
-    val dato = buffer(j)
+    val dato = buffer(j) // extraer dato
     j = (j + 1) % N
     numElems -= 1
     fc = false // termina el turno del consumidor

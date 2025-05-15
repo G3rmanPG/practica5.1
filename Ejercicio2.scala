@@ -20,19 +20,19 @@ object Lago{
   // Condición sincronización: esperan si el lago está vacío
   // Exclusión mutua sobre nivel
   private var nivel = 0
-  @volatile private var fp0 = false
-  @volatile private var fp1 = false
+  @volatile private var fp0 = false // Si la presa 0 quiere tomar turno
+  @volatile private var fp1 = false // Si la presa 1 quiere tomar turno
   @volatile private var turnop = 0 // Turno para cada presa
 
   @volatile private var fp = false
-  @volatile private var fr = false
+  @volatile private var fr = false // Si el río quiere tomar turno
   @volatile private var turnopr = 0 // turno presa = 0, turno río = 1
 
   def incrementar() = {
 
-    fr = true
+    fr = true //
     turnopr = 0
-    while(fp && turnopr == 0) Thread.sleep(0)
+    while(fp && turnopr == 0) Thread.sleep(0) // Mientras que el
 
     nivel += 1
 

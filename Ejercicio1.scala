@@ -48,7 +48,7 @@ object Buffer1{
     j = (j + 1) % N
     numElems -= 1
     fc = false // termina el turno del consumidor
-    dato // devolver el dato
+    dato // devolver el dato (zona no crítica)
   }
 }
 class Ejercicio1 {

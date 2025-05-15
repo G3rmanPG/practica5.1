@@ -68,12 +68,12 @@ object Ejercicio2{
   }
   def nivelLago =  nivel */
   @volatile var nvAgua = 0
-  val nvMax = 1000
-  val aumRio = 1000
+  val nivelMax = 1000
+  val aumentoRio = 1000
   val disPresa = 1000
   val rios = 2
   val presas = 2
-  val numProcesses = rios + presas //Se puede borrar sustituyendo por number.length
+  val numProcesses = rios + presas // O number.length
   @volatile var number = Array.fill(numProcesses)(0) // Número de turno para cada proceso
   @volatile var entering = Array.fill(numProcesses)(false) // Indica si un proceso está intentando entrar
 }
@@ -81,34 +81,36 @@ object RiosYPresas {
   def main(args: Array[String]): Unit = {
     for (i <- 0 until Ejercicio2.numProcesses) {
       if (i < Ejercicio2.rios) { // Significa que va por un proceso de los ríos
-        val p = new Thread{ // Preprotocolo
-          for (k <- 0 until Ejercicio2.aumRio) {
+        val hilo = new Thread{ // Preprotocolo
+          for (k <- 0 until Ejercicio2.aumentoRio) {
       // COMPROBACIÓN de que el nivel de agua no supera el máximo ya que los ríos aportan agua al lago por lo que solo incrementarían su nivel
-            while (Ejercicio2.nvAgua >= Ejercicio2.nvMax) Thread.sleep(0) // Si lo supera, espera a que una presa pueda decrementar el nivel
-            Ejercicio2.entering(i) = true // intento de entrar
-            Ejercicio2.number(i) = Ejercicio2.number.max + 1 // Toma el siguiente número disponible
-            Ejercicio2.entering(i) = false //ya asignado su turno, espera
+            while (Ejercicio2.nvAgua >= Ejercicio2.nivelMax) Thread.sleep(0) // Si lo supera, espera a que una presa pueda decrementar el nivel
+            Ejercicio2.entering(i) = true // el método en pos i quiere entrar
+            Ejercicio2.number(i) = Ejercicio2.number.max + 1 // Toma el siguiente número disponible (siempre es el max del array +1)
+            Ejercicio2.entering(i) = false // ya asignado su turno, espera
+
             // Paso 2: Esperar el turno según el número asignado-> otro proceso esta asignando su numero/ tiene un num menor
-            for (j <- 0 until Ejercicio2.numProcesses) {
-              while (Ejercicio2.entering(j)) Thread.sleep(0)
+            for (j <- 0 until Ejercicio2.numProcesses) { // recorrer todos los procesos para ver si hay otro en ejecución
+              while (Ejercicio2.entering(j)) Thread.sleep(0) // si hay otro proceso, espera
               while (Ejercicio2.number(j) != 0 && (Ejercicio2.number(i) > Ejercicio2.number(j) || (Ejercicio2.number(i) == Ejercicio2.number(j) && i > j))) Thread.sleep(0)
             }
-            // Paso 3: Está en la sección crítica
-            Ejercicio2.nvAgua += 1
+            // Paso 3: Sección crítica
+            Ejercicio2.nvAgua += 1 // incr nivel de agua
             println(s"Nivel del agua= ${Ejercicio2.nvAgua}")
             // Paso 4: Postprotocolo
-            Ejercicio2.number(i) = 0
+            Ejercicio2.number(i) = 0 // Quitamos el turno
           }
         }
-        p.start(); p.join()
+        hilo.start(); hilo.join()
       } else { // Significa que vamos por un proceso de presas
-        val p = new Thread { // Preprotocolo
+        val hilo = new Thread { // Preprotocolo
           for (k <- 0 until Ejercicio2.disPresa) {
       // COMPROBACIÓN de que el nivel de agua no es negativo ya que las presas solo quitarían agua al lago por lo que solo decrementarían su nivel
             while (Ejercicio2.nvAgua <= 0) Thread.sleep(0) // Si es así, espera a que un río lo incremente
-            Ejercicio2.entering(i) = true //intento de entrar
+            Ejercicio2.entering(i) = true // intento de entrar
             Ejercicio2.number(i) = Ejercicio2.number.max + 1 // Toma el siguiente número disponible
             Ejercicio2.entering(i) = false //ya asignado su turno, espera
+
             // Paso 2: Esperar el turno según el número asignado-> otro proceso esta asignando su numero/ tiene un num menor
             for (j <- 0 until Ejercicio2.numProcesses) {
               while (Ejercicio2.entering(j)) Thread.sleep(0)
@@ -121,9 +123,10 @@ object RiosYPresas {
             Ejercicio2.number(i) = 0
           }
         }
-        p.start(); p.join()
+        hilo.start(); hilo.join() // join para esperar q terminen todos los hilos
       }
     }
+
   }
   /*def main(args: Array[String]) = {
     val rio = new Thread(() =>{

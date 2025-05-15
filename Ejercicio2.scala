@@ -1,5 +1,22 @@
 package practica5
 // Ejercicio 2
+/*2. Se quiere simular el comportamiento del nivel de agua en un lago. El lago recibe agua desde
+dos ríos y puede bajar su nivel a través de la apertura de dos presas de acuerdo con la figura.
+El ejercicio también puede implementarse con un río y dos presas. Modelar utilizando espera
+activa el sistema propuesto teniendo en cuenta los siguientes aspectos:
+- Modelar el sistema con una hebra para cada río, una hebra para cada presa y un objeto
+  que tiene una variable de tipo entero que representa el nivel de agua en el lago.
+- Se quiere tener un control exacto del nivel de agua. Por ello, las variaciones en el nivel
+  (incrementos o decrementos) deben realizarse en exclusión mutua.
+- Cada río incrementará el nivel de agua 1000 veces (1 unidad en cada acceso a la zona
+  de exclusión mutua). En el caso de que haya un solo río, éste deberá incrementar el
+  nivel del agua 2000 veces.
+- Cada presa disminuirá el nivel de agua 1000 veces (1 unidad en cada acceso a la zona
+  de exclusión mutua).
+- Si el nivel de agua es 0 las presas no pueden disminuir el nivel de agua.
+- Se debe mostrar el nivel de agua al finalizar el programa (el cual deberá ser 0 tras los
+  2000 incrementos y los 2000 decrementos).
+ */
 class Lago{
   // Condición sincronización: esperan si el lago está vacío
   // Exclusión mutua sobre nivel

@@ -37,14 +37,14 @@ object Buffer1{
     fp = false // Termina el turno del productor
   }
 
-  def extraeDato(dato: Int) = {
+  def extraeDato() = {
     while (numElems == N) Thread.sleep(0) // Condición sincronización consumidor
 
     fc = true // el consumidor quiere entrar
     turno = 0 // dar permiso al consumidor
     while (fp && turno == 0) Thread.sleep(0) // Mientras sea el turno del productor, el consumidor espera
 
-    val dato = buffer(j) // extraer dato
+    val dato = buffer(j) // extraer dato (consume)
     j = (j + 1) % N
     numElems -= 1
     fc = false // termina el turno del consumidor
@@ -53,16 +53,19 @@ object Buffer1{
 }
 class Ejercicio1 {
   def main(args: Array[String]) = {
-    val b = Buffer1(N)
-    val prod = thread {
-      for (i <- 0 until 50)
+    val prod = new Thread {
+      for (i <- 0 until 50) {
         Thread.sleep(Random.nextInt(100))
-      b.nuevoDato(i)
+        Buffer1.nuevoDato(i)
+      }
     }
 
-    val cons = thread {
-      for (i <- 0 until 20)
-
+    val cons = new Thread {
+      for (i <- 0 until 20) {
+        val datoConsumido = Buffer1.extraeDato()
+        println(s"Consumidor lee $datoConsumido")
+        Thread.sleep(Random.nextInt(500))
+      }
     }
   }
 }

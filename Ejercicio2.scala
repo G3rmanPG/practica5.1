@@ -15,9 +15,8 @@ activa el sistema propuesto teniendo en cuenta los siguientes aspectos:
   de exclusión mutua).
 - Si el nivel de agua es 0 las presas no pueden disminuir el nivel de agua.
 - Se debe mostrar el nivel de agua al finalizar el programa (el cual deberá ser 0 tras los
-  2000 incrementos y los 2000 decrementos).
- */
-class Lago{
+  2000 incrementos y los 2000 decrementos). */
+object Lago{
   // Condición sincronización: esperan si el lago está vacío
   // Exclusión mutua sobre nivel
   private var nivel = 0
@@ -29,7 +28,7 @@ class Lago{
   @volatile private var fr = false
   @volatile private var turnopr = 0 // presa = 0, río = 1
 
-  def inc = {
+  def inc() = {
 
     fr = true
     turnopr = 0
@@ -85,7 +84,7 @@ object Ejercicio2 {
   def main(args: Array[String]) = {
     val rio = new Thread(() =>{
       for(i <- 0 until 200)
-      //Lago.inc
+        Lago.inc()
     })
     rio.start()
 

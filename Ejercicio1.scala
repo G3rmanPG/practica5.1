@@ -67,5 +67,6 @@ class Ejercicio1 {
         Thread.sleep(Random.nextInt(500))
       }
     }
+    prod.start(); cons.start();
   }
 }

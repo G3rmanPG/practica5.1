@@ -26,9 +26,9 @@ object Lago{
 
   @volatile private var fp = false
   @volatile private var fr = false
-  @volatile private var turnopr = 0 // presa = 0, río = 1
+  @volatile private var turnopr = 0 // turno presa = 0, turno río = 1
 
-  def inc() = {
+  def incrementar() = {
 
     fr = true
     turnopr = 0
@@ -39,7 +39,7 @@ object Lago{
     fr = false
   }
 
-  def dec0() = {
+  def decrementar0() = {
 
     while(nivel == 0) Thread.sleep(0)
 
@@ -61,7 +61,7 @@ object Lago{
 
   }
 
-  def dec1() = {
+  def decrementar1() = {
 
     fp1 = 1
     turnop = 0
@@ -83,19 +83,19 @@ object Lago{
 object Ejercicio2 {
   def main(args: Array[String]) = {
     val rio = new Thread(() =>{
-      for(i <- 0 until 200)
-        Lago.inc()
+      for(i <- 0 until 2000) // Incrementar nivel de agua 2000 veces
+        Lago.incrementar()
     })
     rio.start()
 
     val presa0 = new Thread(() => {
-      for (i <- 0 until 100)
-      Lago.dec0()
+      for (i <- 0 until 1000) // Decremenetar nivel presa0 1000 veces
+        Lago.decrementar0()
     })
 
     val presa1 = new Thread(() => {
-      for (i <- 0 until 100)
-      Lago.inc()
+      for (i <- 0 until 1000) // Decrementar nivel presa1 1000 veces
+        Lago.incrementar()
     })
     rio.start(); presa0.start(); presa1.start()
     rio.join()

@@ -16,16 +16,7 @@ activa el sistema propuesto teniendo en cuenta los siguientes aspectos:
 - Si el nivel de agua es 0 las presas no pueden disminuir el nivel de agua.
 - Se debe mostrar el nivel de agua al finalizar el programa (el cual deberá ser 0 tras los
   2000 incrementos y los 2000 decrementos). */
-object Lago{
-  @volatile var nvAgua = 0
-  val nvMax = 1000
-  val aumRio = 1000
-  val disPresa = 1000
-  val rios = 2
-  val presas = 2
-  val numProcesses = rios + presas //Se puede borrar sustituyendo por number.length
-  @volatile var number = Array.fill(numProcesses)(0) // Número de turno para cada proceso
-  @volatile var entering = Array.fill(numProcesses)(false) // Indica si un proceso está intentando entrar
+object Ejercicio2{
   // Condición sincronización: esperan si el lago está vacío
   // Exclusión mutua sobre nivel
   /*private var nivel = 0
@@ -76,8 +67,64 @@ object Lago{
     fp1 = false
   }
   def nivelLago =  nivel */
+  @volatile var nvAgua = 0
+  val nvMax = 1000
+  val aumRio = 1000
+  val disPresa = 1000
+  val rios = 2
+  val presas = 2
+  val numProcesses = rios + presas //Se puede borrar sustituyendo por number.length
+  @volatile var number = Array.fill(numProcesses)(0) // Número de turno para cada proceso
+  @volatile var entering = Array.fill(numProcesses)(false) // Indica si un proceso está intentando entrar
 }
-object Ejercicio2 {
+object RiosYPresas {
+  def main(args: Array[String]): Unit = {
+    for (i <- 0 until Ejercicio2.numProcesses) {
+      if (i < Ejercicio2.rios) { // Significa que va por un proceso de los ríos
+        val p = new Thread{ // Preprotocolo
+          for (k <- 0 until Ejercicio2.aumRio) {
+      // COMPROBACIÓN de que el nivel de agua no supera el máximo ya que los ríos aportan agua al lago por lo que solo incrementarían su nivel
+            while (Ejercicio2.nvAgua >= Ejercicio2.nvMax) Thread.sleep(0) // Si lo supera, espera a que una presa pueda decrementar el nivel
+            Ejercicio2.entering(i) = true // intento de entrar
+            Ejercicio2.number(i) = Ejercicio2.number.max + 1 // Toma el siguiente número disponible
+            Ejercicio2.entering(i) = false //ya asignado su turno, espera
+            // Paso 2: Esperar el turno según el número asignado-> otro proceso esta asignando su numero/ tiene un num menor
+            for (j <- 0 until Ejercicio2.numProcesses) {
+              while (Ejercicio2.entering(j)) Thread.sleep(0)
+              while (Ejercicio2.number(j) != 0 && (Ejercicio2.number(i) > Ejercicio2.number(j) || (Ejercicio2.number(i) == Ejercicio2.number(j) && i > j))) Thread.sleep(0)
+            }
+            // Paso 3: Está en la sección crítica
+            Ejercicio2.nvAgua += 1
+            println(s"Nivel del agua= ${Ejercicio2.nvAgua}")
+            // Paso 4: Postprotocolo
+            Ejercicio2.number(i) = 0
+          }
+        }
+        p.start(); p.join()
+      } else { // Significa que vamos por un proceso de presas
+        val p = new Thread { // Preprotocolo
+          for (k <- 0 until Ejercicio2.disPresa) {
+      // COMPROBACIÓN de que el nivel de agua no es negativo ya que las presas solo quitarían agua al lago por lo que solo decrementarían su nivel
+            while (Ejercicio2.nvAgua <= 0) Thread.sleep(0) // Si es así, espera a que un río lo incremente
+            Ejercicio2.entering(i) = true //intento de entrar
+            Ejercicio2.number(i) = Ejercicio2.number.max + 1 // Toma el siguiente número disponible
+            Ejercicio2.entering(i) = false //ya asignado su turno, espera
+            // Paso 2: Esperar el turno según el número asignado-> otro proceso esta asignando su numero/ tiene un num menor
+            for (j <- 0 until Ejercicio2.numProcesses) {
+              while (Ejercicio2.entering(j)) Thread.sleep(0)
+              while (Ejercicio2.number(j) != 0 && (Ejercicio2.number(i) > Ejercicio2.number(j) || (Ejercicio2.number(i) == Ejercicio2.number(j) && i > j))) Thread.sleep(0)
+            }
+            // Paso 3: Está en la sección crítica
+            Ejercicio2.nvAgua -= 1
+            println(s"Nivel del agua= ${Ejercicio2.nvAgua}")
+            // Paso 4: Postprotocolo
+            Ejercicio2.number(i) = 0
+          }
+        }
+        p.start(); p.join()
+      }
+    }
+  }
   /*def main(args: Array[String]) = {
     val rio = new Thread(() =>{
       for(i <- 0 until 2000) // Incrementar nivel de agua 2000 veces

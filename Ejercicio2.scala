@@ -39,7 +39,7 @@ object Lago{
     fr = false
   }
 
-  def dec0 = {
+  def dec0() = {
 
     while(nivel == 0) Thread.sleep(0)
 
@@ -61,7 +61,7 @@ object Lago{
 
   }
 
-  def dec1 = {
+  def dec1() = {
 
     fp1 = 1
     turnop = 0
@@ -90,14 +90,18 @@ object Ejercicio2 {
 
     val presa0 = new Thread(() => {
       for (i <- 0 until 100)
-      //Lago.dec0
+      Lago.dec0()
     })
 
     val presa1 = new Thread(() => {
       for (i <- 0 until 100)
-      //Lago.inc
+      Lago.inc()
     })
+    rio.start(); presa0.start(); presa1.start()
+    rio.join()
+    presa0.join(); presa1.join()
+    println(s"Nivel del lago = ${Lago.nivelLago}")
   }
 
-  rio.join()
+
 }

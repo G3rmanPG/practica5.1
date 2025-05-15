@@ -30,9 +30,9 @@ object Buffer1{
     fp = true
     turno = 1 // Dar permiso al consumidor
 
-    while (fc && turno == 1) Thread.sleep(0)
+    while (fc && turno == 1) Thread.sleep(0) // Mientras que sea el permiso del consumidor, espera
     buffer(i) == dato // Añadir dato al buffer
-    i = (i + 1) % n
+    i = (i + 1) % N // Envolver posición por si nos hemos pasado de la longitud del array
     numElems += 1 // Incrementar nº elementos
 
   }

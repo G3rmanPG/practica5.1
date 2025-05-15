@@ -28,57 +28,7 @@ object Lago{
   @volatile private var fr = false // Si el río quiere tomar turno
   @volatile private var turnopr = 0 // turno presa = 0, turno río = 1
 
-  def incrementar() = {
 
-    fr = true //
-    turnopr = 0
-    while(fp && turnopr == 0) Thread.sleep(0) // Mientras que el
-
-    nivel += 1
-
-    fr = false
-  }
-
-  def decrementar0() = {
-
-    while(nivel == 0) Thread.sleep(0)
-
-    fp0 = true
-    turnop = 1
-    while(fp1 && turnopr == 1) Thread.sleep(0)
-
-    // while(nivel == 0) Thread.sleep(0)
-
-    fp = true
-    turnopr = 1
-    while(fr && turnopr == 1)Thread.sleep(0)
-
-    nivel -= 1
-
-    fp = false
-
-    fp0 = false
-
-  }
-
-  def decrementar1() = {
-
-    fp1 = 1
-    turnop = 0
-    while(fp0 && turnop == 0) Thread.sleep(0)
-
-    fp = true
-    turnopr = 1
-    while(fr && turnopr == 1) Thread.sleep(0)
-
-    nivel -=1
-    fp =false
-
-    fp1 = false
-
-  }
-
-  def nivelLago =  nivel
 }
 object Ejercicio2 {
   def main(args: Array[String]) = {

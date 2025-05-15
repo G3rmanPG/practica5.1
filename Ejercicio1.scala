@@ -40,9 +40,9 @@ object Buffer1{
   def extraeDato(dato: Int) = {
     while (numElems == N) Thread.sleep(0) // Condición sincronización consumidor
 
-    fc = true
+    fc = true // el consumidor quiere entrar
     turno = 0 // dar permiso al consumidor
-    while (fp && turno == 0) Thread.sleep(0)
+    while (fp && turno == 0) Thread.sleep(0) // Mientras sea el turno del productor, el consumidor espera
 
     val dato = buffer(j)
     j = (j + 1) % N
